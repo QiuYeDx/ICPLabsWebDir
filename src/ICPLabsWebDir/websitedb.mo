@@ -7,24 +7,45 @@ import Principal "mo:base/Principal";
 import List "mo:base/List";
 
 module{
+    type Website = types.Website;
+    public class Websitedb{
 //hashmap
-    //label -> ID
-    private var label_to_id = HashMap.HashMap<Text, List.List<Nat>>(1, Text.equal, Text.hash);
-    //ID -> title
-    private var id_to_title = HashMap.HashMap<Nat, Text>(1,Hash.equal, Hash.hash);
-    //ID -> url
-    private var id_to_url = HashMap.HashMap<Nat, Text>(1,Hash.equal, Hash.hash);
-    //ID -> label
-    private var id_to_label = HashMap.HashMap<Nat, Text>(1,Hash.equal, Hash.hash);
-    
+        //label -> ID
+        private var label_to_id = HashMap.HashMap<Text, List.List<Nat>>(1, Text.equal, Text.hash);
+        //ID -> title
+        private var id_to_title = HashMap.HashMap<Nat, Text>(1,Hash.equal, Hash.hash);
+        //ID -> url
+        private var id_to_url = HashMap.HashMap<Nat, Text>(1,Hash.equal, Hash.hash);
+        //ID -> label
+        private var id_to_label = HashMap.HashMap<Nat, Text>(1,Hash.equal, Hash.hash);
+
 //global variable
-    //present Website ID
-    private var _ID : Nat = 1;
+        //present Website ID
+        private var _ID : Nat = 1;
 
 //website function
-    public func uploadWebsite(website : Website) : bool{
-        var websiteID_ = _ID;
-        _ID +=1 ;
+        public func uploadWebsite(website : Website) : bool{
+            var websiteID_ = _ID;
+            _ID +=1 ;
+
+            //put this website's ID & title into the id_to_title map
+            id_to_title.put(websiteID_, website.title);
+            //put this website's ID & url into the id_to_url map
+            id_to_url.put(websiteID_, website.url);
+            //put this website's ID & label into the id_to_label map
+            id_to_label.put(websiteID_, website.label);
+            //put this website's title & ID into the title_to_id map
+            switch(title_to_id.get(website.title)){
+                case(?list){
+                    var tempList = List.append(list, List.make<Nat>(websiteId_));
+                    title_to_id.put(website.title, tempList);
+                };
+                case(_){
+                    title_to_id.put(website.title, List.make<Nat>(websiteId_));
+                };
+            };
+            true
+        };
     }
 
     public func greet(name : Text) : async Text {
